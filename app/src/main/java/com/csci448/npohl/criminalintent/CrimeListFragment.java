@@ -120,10 +120,7 @@ public class CrimeListFragment extends Fragment {
     private void updateSubtitle() {
         CrimeLab crimeLab = CrimeLab.get(getActivity());
         int crimeCount = crimeLab.getCrimes().size();
-        //book says to use following line, but compiler doesn't like the second argument
-        //this bug leads to number of crimes not being displayed
-        //String subtitle = getString(R.string.subtitle_format, crimeCount);
-        String subtitle = getString(R.string.subtitle_format);
+        String subtitle = getString(R.string.subtitle_format, crimeCount);
 
         if (!mSubtitleVisible) {
             subtitle = null;
