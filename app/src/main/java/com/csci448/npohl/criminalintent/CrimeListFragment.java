@@ -1,6 +1,7 @@
 package com.csci448.npohl.criminalintent;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -13,7 +14,9 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -31,6 +34,7 @@ public class CrimeListFragment extends Fragment {
     private CrimeAdapter mAdapter;
     private boolean mSubtitleVisible;
     private Callbacks mCallbacks;
+    private LinearLayout mEmptyLayout;
 
     /**
      * Required interface for hosting activites.
@@ -40,9 +44,9 @@ public class CrimeListFragment extends Fragment {
     }
 
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        mCallbacks = (Callbacks) activity;
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        mCallbacks = (Callbacks) context;
     }
 
     @Override
@@ -54,6 +58,8 @@ public class CrimeListFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_cime_list, container, false);
+
+        mEmptyLayout = (LinearLayout) view.findViewById(R.id.no_crime_view);
 
         mCrimeRecyclerView = (RecyclerView) view.findViewById(R.id.crime_recycler_view);
         mCrimeRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -140,6 +146,22 @@ public class CrimeListFragment extends Fragment {
         }
         else {
             mAdapter.notifyDataSetChanged();
+        }
+
+        if(CrimeLab.get(getActivity()).getCrimes().size() == 0) {
+            Button createCrimeButton = (Button) mEmptyLayout.findViewById(R.id.create_crime_button);
+            createCrimeButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Crime crime = new Crime();
+                    CrimeLab.get(getActivity()).addCrime(crime);
+                    updateUI();
+                    mCallbacks.onCrimeSelected(crime);
+                }
+            });
+        }
+        else {
+            mEmptyLayout.setVisibility(View.GONE);
         }
 
         updateSubtitle();
