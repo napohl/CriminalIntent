@@ -1,7 +1,9 @@
 package com.csci448.npohl.criminalintent;
 
 import android.content.Context;
+import android.os.Environment;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -14,6 +16,7 @@ public class CrimeLab {
     private static CrimeLab sCrimeLab;
 
     private List<Crime> mCrimes;
+    private Context mContext;
 
     public static CrimeLab get(Context context) {
         if (sCrimeLab == null) {
@@ -23,6 +26,7 @@ public class CrimeLab {
     }
 
     private CrimeLab(Context context) {
+        mContext = context.getApplicationContext();
         mCrimes = new ArrayList<>();
     }
 
@@ -41,5 +45,11 @@ public class CrimeLab {
             }
         }
         return null;
+    }
+
+    public File getPhotoFile(Crime crime) {
+        File filesDir = mContext.getFilesDir();
+
+        return new File(filesDir, crime.getPhotoFilename());
     }
 }
