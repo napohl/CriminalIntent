@@ -83,6 +83,14 @@ public class CrimeFragment extends Fragment {
     }
 
     @Override
+    public void onPause() {
+        super.onPause();
+
+        CrimeLab.get(getActivity()).updateCrime(mCrime);
+    }
+
+
+    @Override
     public void onDetach() {
         super.onDetach();
         mCallbacks = null;
@@ -223,9 +231,7 @@ public class CrimeFragment extends Fragment {
     }
 
     private void updateCrime() {
-
-        //turn on when we implement sqlite
-        //CrimeLab.get(getActivity()).updateCrime(mCrime);
+        CrimeLab.get(getActivity()).updateCrime(mCrime);
         mCallbacks.onCrimeUpdated(mCrime);
     }
 
